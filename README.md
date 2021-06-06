@@ -1,5 +1,5 @@
 # UnityLevySimulation
-## A simulation environment to for Lévy foraging simulations.
+## A simulation environment for Lévy foraging simulations.
 
 These are the instructions to run the Lévy and random walker simulations as shown in the report. Note that for this to work you need to have Unity version 2019.4.25f1 and a compatible version of Unity Hub installed. All the statistics are gathered in standard .csv formats which can be directly imported into Python using pd.read_csv(filename). 
 
@@ -24,3 +24,8 @@ To adjust the simulation environment in terms of food distribution:
 2. Adjust the "N_sources" integer value shown in the inspector.
 3. Select the "FoodSource" object in the hierarchy.
 4. Adjust the "Max_drop" integer value shown in the inspector.
+
+## Graph creation
+To recreate the graphs associated with the report:
+1. Levy.py to compare different Lévy sampling functions
+2. UnityGraphs.py to create the graphs based on the simulation statistics
