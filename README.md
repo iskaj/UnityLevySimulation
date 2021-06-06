@@ -9,8 +9,6 @@ To boot up the project
 3. Click "add" and navigate to the project folder called "Simulation_Environment"
 4. Start the "Simulation_Environment" project with Unity version 2019.4.25f1.
 
-Now to actually run the environment and/or change the settings, see the following instructions: 
-
 To run the levy simulation:
 1. Press the play button inside the Unity Editor. 
 2. Let the simulation run for x amount of time, depending on how many samples you want to gather. The .csv files containing the statistics will be written to files in the "Statistics" folder of the project. Note that you can stop running and start running again without any problem.
