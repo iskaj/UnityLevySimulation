@@ -59,24 +59,45 @@ with open(PATH_LEVY, "r", encoding='utf-8') as file:
 
 loc = 2
 scale = 1
-iterations = 100000 # 100
+iterations = 240040 # 100000
 truncate = 5000
 bins = 5000 # 100
 val_scipy = get_levy(loc, scale, iterations, truncate, 'scipy')
-val_wiki = get_levy(loc, scale, iterations, truncate, 'wiki')
-val_unity = val_unity[:iterations]
-print(f"VALUES SCIPY of length {len(val_scipy)}")
-print(f"VALUES WIKI of length {len(val_wiki)}")
-print(f"VALUES UNITY of length {len(val_unity)}")
-print(f"val_scipy - Mean: {np.mean(val_scipy)}, Median: {np.median(val_scipy)}")
-print(f"val_wiki - Mean: {np.mean(val_wiki)}, Median: {np.median(val_wiki)}")
+# val_wiki = get_levy(loc, scale, iterations, truncate, 'wiki')
+# val_unity = val_unity[:iterations]
+# print(f"VALUES SCIPY of length {len(val_scipy)}")
+# print(f"VALUES WIKI of length {len(val_wiki)}")
+# print(f"VALUES UNITY of length {len(val_unity)}")
+# print(f"val_scipy - Mean: {np.mean(val_scipy)}, Median: {np.median(val_scipy)}")
+# print(f"val_wiki - Mean: {np.mean(val_wiki)}, Median: {np.median(val_wiki)}")
 print(f"val_unity - Mean: {np.mean(val_unity)}, Median: {np.median(val_unity)}")
 
-print(ks_2samp(val_scipy, val_wiki))
-print(ks_2samp(val_scipy, val_unity))
-print(ks_2samp(val_wiki, val_unity))
+from os import listdir
+from os.path import isfile, join
+print(listdir("neat_results"))
+PATH_NEAT = r"D:\University Files\Natural Computing\Simulation_Environment\Assets\Statistics\neat_results" + "\\"
+for filename in listdir("neat_results"):
+    full_path = PATH_NEAT + filename
+    # print(full_path)
+    with open(full_path, "r", encoding='utf-8') as file:
+        text = file.read()
+        # print(text.split(','))
+        values = []
+        for val in text.split(','):
+            values.append(float(val))
+        # print(values)
+        print(filename, " --- ", ks_2samp(val_scipy, values))
 
-sns.set_style("darkgrid")
+
+
+# print(val_unity)
+print(len(val_scipy))
+
+# print(ks_2samp(val_scipy, val_wiki))
+# print(ks_2samp(val_scipy, val_unity))
+# print(ks_2samp(val_wiki, val_unity))
+
+# sns.set_style("darkgrid")
 # fig = plt.figure(figsize=(10, 5))
 
 # fig, (ax1, ax2, ax3) = plt.subplots(3, sharey=True)
@@ -108,46 +129,46 @@ sns.set_style("darkgrid")
 # print("unity done")
 # plt.show()
 
-fig = plt.figure(figsize=(10, 5))
-ax1 = plt.subplot(1, 3, 1)
-plt.title("Scipy.stats\nbased Lévy distribution")
-sns.histplot(val_scipy, color='blue', bins=bins)
-plt.axvline(np.mean(val_scipy), 0.0, 0.5, color='black', label='mean')
-plt.axvline(np.median(val_scipy), 0.0, 0.5, color='gray', label='median')
-plt.legend()
-plt.xlim(0, 100)
-plt.ylim(0, 35000)
-# plt.ylim(0, 90)
-plt.xlabel("Flight distance")
-print("scipy done")
-
-ax2 = plt.subplot(1, 3, 2)
-plt.title("Python inverse sampling \nbased Lévy distribution")
-sns.histplot(val_wiki, color='red', bins=bins)
-plt.axvline(np.mean(val_wiki), 0.0, 0.5, color='black', label='mean')
-plt.axvline(np.median(val_wiki), 0.0, 0.5, color='gray', label='median')
-plt.legend()
-plt.xlim(0, 100)
-plt.ylim(0, 35000)
-# plt.yticks([])
-plt.ylabel("")
-plt.xlabel("Flight distance")
-print("wiki done")
-
-plt.subplot(1, 3, 3)
-plt.title("Unity inverse sampling \nbased Lévy distribution")
-sns.histplot(val_unity, color='green', bins=bins)
-plt.axvline(np.mean(val_unity), 0.0, 0.5, color='black', label='mean')
-plt.axvline(np.median(val_unity), 0.0, 0.5, color='gray', label='median')
-plt.legend()
-plt.xlim(0, 100)
-plt.ylim(0, 35000)
-# plt.yticks([])
-plt.ylabel("")
-plt.xlabel("Flight distance")
-print("unity done")
-
-plt.show()
+# fig = plt.figure(figsize=(10, 5))
+# ax1 = plt.subplot(1, 3, 1)
+# plt.title("Scipy.stats\nbased Lévy distribution")
+# sns.histplot(val_scipy, color='blue', bins=bins)
+# plt.axvline(np.mean(val_scipy), 0.0, 0.5, color='black', label='mean')
+# plt.axvline(np.median(val_scipy), 0.0, 0.5, color='gray', label='median')
+# plt.legend()
+# plt.xlim(0, 100)
+# plt.ylim(0, 35000)
+# # plt.ylim(0, 90)
+# plt.xlabel("Flight distance")
+# print("scipy done")
+#
+# ax2 = plt.subplot(1, 3, 2)
+# plt.title("Python inverse sampling \nbased Lévy distribution")
+# sns.histplot(val_wiki, color='red', bins=bins)
+# plt.axvline(np.mean(val_wiki), 0.0, 0.5, color='black', label='mean')
+# plt.axvline(np.median(val_wiki), 0.0, 0.5, color='gray', label='median')
+# plt.legend()
+# plt.xlim(0, 100)
+# plt.ylim(0, 35000)
+# # plt.yticks([])
+# plt.ylabel("")
+# plt.xlabel("Flight distance")
+# print("wiki done")
+#
+# plt.subplot(1, 3, 3)
+# plt.title("Unity inverse sampling \nbased Lévy distribution")
+# sns.histplot(val_unity, color='green', bins=bins)
+# plt.axvline(np.mean(val_unity), 0.0, 0.5, color='black', label='mean')
+# plt.axvline(np.median(val_unity), 0.0, 0.5, color='gray', label='median')
+# plt.legend()
+# plt.xlim(0, 100)
+# plt.ylim(0, 35000)
+# # plt.yticks([])
+# plt.ylabel("")
+# plt.xlabel("Flight distance")
+# print("unity done")
+#
+# plt.show()
 
 
 # sns.set_style("darkgrid")

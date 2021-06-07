@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import seaborn as sns
 import matplotlib.pyplot as plt
+import scipy
 
 # Batch 1 was 278 files
 # So take the last (longest_file -448) files
@@ -19,6 +20,13 @@ def mu_names(filename, means):
             mus.append(fn[len(filename)+1:len(filename)+7])
     return mus
 
+def mean_confidence_interval(data, confidence=0.95):
+    a = 1.0 * np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    return m, m-h, m+h
+
 def create_df(filename):
     """
     Create the dataframe of all the statistics for a given filename, for example for all the
@@ -32,14 +40,17 @@ def create_df(filename):
         if os.path.exists(path):
             df = pd.read_csv(path)
             print(len(df.consumedFoodCount))
-
+            # print(df)
             # df = df[-180:]
             # print(len(df.consumedFoodCount))
             df_column_name = fn[len(filename)+1:len(filename)+7]
+            m, m_min_h, m_plus_h = mean_confidence_interval(df['searchEfficiency'], 0.95)
             column_dict.append({"Mu": float(fn[len(filename)+4:len(filename)+7]),
                                 "Average Food Consumed": np.mean(df['consumedFoodCount']),
                                 "Average Flight Distance": np.mean(df['distanceTraversed']),
-                                "Average Search Efficiency": np.mean(df['searchEfficiency'])})
+                                "Average Search Efficiency": m,
+                                "CI Lower Bound": m_min_h,
+                                "CI Upper Bound": m_plus_h})
     return pd.DataFrame(column_dict)
 
 STAT_PATH = r"D:\University Files\Natural Computing\NEAT_V2_Release\Assets\Statistics\\"
@@ -50,7 +61,8 @@ all_means = np.arange(0.0, 3.1, step=0.1)
 # print(f"Number of means: {len(all_means)} \n {all_means}")
 filename = "cluster_3"
 df = create_df(filename)
-print(df)
+# print(df)
+print(df.loc[df['Mu'] == 0.1].T)
 graph = sns.lineplot(x=df['Mu'], y=df['Average Search Efficiency'])
 sns.regplot(x=df['Mu'], y=df['Average Search Efficiency'],
                  order=2, marker=".") # label="Fitted second order polynomial"
@@ -60,8 +72,12 @@ plt.ylim(0.215, 0.24)
 plt.title("Average search efficiency for different means \n of the Lévy distribution in the clustered simulation environment")
 
 # Plot performance of random walker
-random_mean = np.mean(pd.read_csv(filename + "_random.csv")["searchEfficiency"])
-print(random_mean)
+df_random_mean = pd.read_csv(filename + "_random.csv")
+random_mean, m_min_h, m_plus_h = mean_confidence_interval(df_random_mean['searchEfficiency'], 0.95)
+print("--- random walker --- ")
+print("CI Lower Bound: ", m_min_h)
+print("CI Upper Bound: ", m_plus_h)
+print("ASE: ", random_mean)
 graph.axhline(random_mean, label="Random Walker", linestyle="--", color="black")
 plt.legend()
 plt.show()
