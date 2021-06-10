@@ -29,3 +29,9 @@ To adjust the simulation environment in terms of food distribution:
 To recreate the graphs associated with the report:
 1. Levy.py to compare different Lévy sampling functions
 2. UnityGraphs.py to create the graphs based on the simulation statistics
+
+## Example of system behaviour
+
+![Comparison between search efficiencies](search_eff_comp.png)
+
+![Optimization of the mu parameter for the Lévy distribution](Levy_Sparse.png)
